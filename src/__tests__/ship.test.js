@@ -1,6 +1,6 @@
 import ship from '../Logic/ship.js'
 
-describe('ship', () => { 
+describe('ship tests', () => { 
     let shipTest;
     beforeAll(()=>{
         shipTest = ship(3);
