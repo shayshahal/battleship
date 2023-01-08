@@ -22,5 +22,17 @@ module.exports = merge(common, {
         open: true,
         hot: true,
         compress: true,
-    }
+    },
+    resolve: {
+        alias: {
+            config$: './configs/app-config.js',
+        },
+        extensions: ['.js', '.jsx'],
+        modules: [
+            'node_modules',
+            'bower_components',
+            'shared',
+            '/shared/vendor/modules',
+        ],
+    },
 });
