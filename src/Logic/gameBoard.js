@@ -43,14 +43,11 @@ export default gameBoard = () =>{
         board[coor.x][coor.y].checked = true;
         if(board[coor.x][coor.y].ship){
             board[coor.x][coor.y].ship.hit();
-            if(!outOfBounds({x: coor.x+1, y: coor.y+1}))
-                board[coor.x+1][coor.y+1].checked = true;
-            if(!outOfBounds({x: coor.x+1, y: coor.y-1}))
-                board[coor.x+1][coor.y-1].checked = true;
-            if(!outOfBounds({x: coor.x-1, y: coor.y+1}))
-                board[coor.x-1][coor.y+1].checked = true;
-            if(!outOfBounds({x: coor.x-1, y: coor.y-1}))
-                board[coor.x-1][coor.y-1].checked = true;
+            // If hit, all diagonal adjacencies are also known to not be occupied
+            for(let i = -1; i < 3; i += 2)
+                for(let k = -1; k < 3; k += 2)
+                    if(!outOfBounds({x: coor.x+1, y: coor.y+1}))
+                        board[coor.x+1][coor.y+1].checked = true;
             if(board[coor.x][coor.y].ship.isSunk())
                 counter++;
             return true;
