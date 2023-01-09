@@ -1,60 +1,62 @@
 import gameBoard from '../Logic/gameBoard.js'
 import battleship from '../Logic/ship.js'
+
+let board, shipArr = new Array(4);
+
+    board = gameBoard();
+    for (let i = 0; i < 4; i++) {
+        shipArr[i] = Array.from(Array(4-i), () => battleship(i+1)); 
+    }
+
+
 describe('gameBoard tests', () => { 
-    let board, shipArr;
-    beforeAll(()=> {
-        board = gameBoard();
-        shipArr = new Array(4);
-        for (let i = 0; i < 4; i++) {
-            shipArr[i] = Array.from(Array(4-i), () => battleship(i+1)); 
-        }
-    })
+    
     describe('ship placing tests', () => { 
         test('should fail to place a outside of bounds', () => {
             let rndX = ~~(Math.random*20);
             let rndY = rndX - 10;
-            expect(board.placeShip(ship[0][0], {x: rndX, y:rndY})).toBeFalsy();
+            expect(board.placeShip(shipArr[0][0], {x: rndX, y:rndY})).toBeFalsy();
         })
 
         test('should place a part of a ship successfully', () => { 
-            expect(board.placeShip(ship[1][0], {x: 1, y:1})).toBeTruthy();
+            expect(board.placeShip(shipArr[1][0], {x: 1, y:1})).toBeTruthy();
         });
 
         test('should fail to place a second part of the ship diagonally', () => {
             let offsetX = 1 - 2*~~(Math.random*2);
             let offsetY = 1 - 2*~~(Math.random*2);
-            expect(board.placeShip(ship[1][0], {x: 1 + offsetX, y:1 + offsetY})).toBeFalsy();
+            expect(board.placeShip(shipArr[1][0], {x: 1 + offsetX, y:1 + offsetY})).toBeFalsy();
         })
 
         test('should place a second part of the ship near the first', () => {
-            expect(board.placeShip(ship[1][0], {x: 0, y: 1})).toBeTruthy();
+            expect(board.placeShip(shipArr[1][0], {x: 0, y: 1})).toBeTruthy();
         });
 
         test('should fail to place a new ship on/near the previous one', () => {
             let offsetX = ~~(Math.random*3) - 1; 
             let offsetY = ~~(Math.random*3) - 1; 
-            expect(board.placeShip(ship[0][1], {x: 1 + offsetX, y:1 + offsetY})).toBeFalsy();
+            expect(board.placeShip(shipArr[0][1], {x: 1 + offsetX, y:1 + offsetY})).toBeFalsy();
         })
 
         test('should place a new ship', () => {
-            expect(board.placeShip(ship[0][1], {x: 9, y:9})).toBeTruthy();
+            expect(board.placeShip(shipArr[0][0], {x: 9, y:9})).toBeTruthy();
         });
     });
     describe('Receive attack tests', () => {
         // Initialize board for check
-        board.placeShip(ship[0][0], {x:0, y:9})
-        board.placeShip(ship[0][2], {x:9, y:0})
-        board.placeShip(ship[0][3], {x:1, y:5})
+        board.placeShip(shipArr[0][1], {x:0, y:9})
+        board.placeShip(shipArr[0][2], {x:9, y:0})
+        board.placeShip(shipArr[0][3], {x:1, y:5})
         for(let i = 0; i < 2; i++)
-            board.placeShip(ship[2][0], {x:4+i, y:6});
+            board.placeShip(shipArr[1][1], {x:4+i, y:6});
         for(let i = 0; i < 2; i++)
-            board.placeShip(ship[2][0], {x:9, y:6+i});
+            board.placeShip(shipArr[1][2], {x:9, y:6+i});
         for (let i = 0; i < 3; i++) 
-            board.placeShip(ship[3][0], {x:3+i, y:9});
+            board.placeShip(shipArr[2][0], {x:3+i, y:9});
         for (let i = 0; i < 3; i++) 
-            board.placeShip(ship[3][1], {x:9, y:2+i});
+            board.placeShip(shipArr[2][1], {x:9, y:2+i});
         for (let i = 0; i < 4; i++) 
-            board.placeShip(ship[4][0], {x:0, y:6-i});
+            board.placeShip(shipArr[3][0], {x:0, y:6-i});
         
         test('should attack ship successfully', () => {
             expect(board.receiveAttack({x: 0, y: 9})).toBeTruthy();
