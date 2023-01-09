@@ -12,14 +12,14 @@ export default gameBoard = () =>{
         // Runs on adjacent coordinates
         for (let i = -1; i < 2; i++) {
             for (let k = -1; k < 2; k++){
-                const curr = board[coor.x+i][coor.y+k];
+                const curr = board[coor.x+i] ? board[coor.x+i][coor.y+k] : null;
                 // If spot is out of bounds or
                 if(curr){
                     /* Checks if 
                         1.coordinates are not already occupied or diagonally adjacent to an occupied spot.
                         2.coordinates are adjacent to another ship
                     */
-                    if((((i === 0 && k === 0) || (i !== 0 && k !== 0)) && curr.ship) || curr.ship !== ship)
+                    if((((i === 0 && k === 0) || (i !== 0 && k !== 0)) && curr.ship) || (ship??curr.ship) !== ship)
                         return false;
                 }
             }        
@@ -37,11 +37,20 @@ export default gameBoard = () =>{
     const isDestroyed = () => counter.every(s=> !s);
     
     const receiveAttack = (coor) =>{
+        board[coor.x, coor.y].checked = true;
         if(board[coor.x, coor.y].ship){
             board[coor.x, coor.y].ship.hit();
+            if(board[coor.x+1, coor.y+1])
+                board[coor.x+1, coor.y+1].checked = true;
+            if(board[coor.x+1, coor.y-1])
+                board[coor.x+1, coor.y-1].checked = true;
+            if(board[coor.x-1, coor.y+1])
+                board[coor.x-1, coor.y+1].checked = true;
+            if(board[coor.x-1, coor.y-1])
+                board[coor.x-1, coor.y-1].checked = true;
+            return true;
         }
-
-        return false
+        return false;
     }
     return {placeShip, removeShip, receiveAttack, isDestroyed}
 }
