@@ -55,6 +55,7 @@ export default gameBoard = () =>{
             if(board[coor.x][coor.y].ship.isSunk())
             {   
                 counter++;
+                // If ship is sunk, you can also be sure that all horizontal and vertical adjacent squares are also checked 
                 if(!outOfBounds({x: coor.x, y: coor.y + 1}))
                     checks[1][2] = true;
                 if(!outOfBounds({x: coor.x, y: coor.y - 1}))
