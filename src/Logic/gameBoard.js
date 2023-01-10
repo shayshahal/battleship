@@ -42,15 +42,30 @@ export default gameBoard = () =>{
     const receiveAttack = (coor) =>{
         board[coor.x][coor.y].checked = true;
         if(board[coor.x][coor.y].ship){
+            let checks = [[null, null, null],[null, null, null],[null, null, null]]; // matrix of adjacent squares
             board[coor.x][coor.y].ship.hit();
             // If hit, all diagonal adjacencies are also known to not be occupied
             for(let i = -1; i < 3; i += 2)
                 for(let k = -1; k < 3; k += 2)
                     if(!outOfBounds({x: coor.x+i, y: coor.y+k}))
+                    {
                         board[coor.x+i][coor.y+k].checked = true;
+                        checks[i+1][k+1] = true;
+                    }
             if(board[coor.x][coor.y].ship.isSunk())
+            {   
                 counter++;
-            return true;
+                if(!outOfBounds({x: coor.x, y: coor.y + 1}))
+                    checks[1][2] = true;
+                if(!outOfBounds({x: coor.x, y: coor.y - 1}))
+                    checks[1][0] = true;
+                if(!outOfBounds({x: coor.x - 1, y: coor.y}))
+                    checks[0][1] = true;
+                if(!outOfBounds({x: coor.x + 1, y: coor.y}))
+                    checks[2][1] = true;
+            }
+            checks[1][1] = true;
+            return checks;
         }
         return false;
     }

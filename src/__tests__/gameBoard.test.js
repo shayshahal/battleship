@@ -1,11 +1,6 @@
 import gameBoard from '../Logic/gameBoard.js'
 import battleship from '../Logic/ship.js'
 
-
-
-
-
-
 describe('gameBoard tests', () => { 
     let board, shipArr = new Array(4);
     board = gameBoard();
@@ -67,7 +62,11 @@ describe('gameBoard tests', () => {
 
         
         test('should attack ship successfully', () => {
-            expect(board.receiveAttack({x: 0, y: 0})).toBeTruthy();
+            expect(board.receiveAttack({x: 0, y: 0})).toStrictEqual([
+                [null, null, null],
+                [null, true, true],
+                [null, true, true]
+            ]);
         });
 
         test('should miss ship and fail', () => {
