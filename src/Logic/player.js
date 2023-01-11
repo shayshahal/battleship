@@ -19,7 +19,7 @@ export default player = () =>{
         let len = n.pop();
         let coor = {x: ~~(Math.random()*10), y: ~~(Math.random()*10)};
         let vector = checkVector(coor, len, arr);
-        if(!vector)
+        if(vector === undefined)
             return generatePlacement([...n, len], arr);
         for (let i = 0; i < len; i++)
             arr[coor.x + i*vector.x][coor.y + i*vector.y] = len;
@@ -28,19 +28,23 @@ export default player = () =>{
     const checkVector = (coor, len, arr) =>{
         let options = [];
         let checkDirection = (lr, ud) =>{
+            let failed = false;
             for (let i = 0; i < len; i++) {
-                let spot = arr[coor.x + (i*l)]?arr[coor.x + (i*lr)][coor.y + (i*ud)]:null;
-                let lookFurther = arr[coor.x+1 + (i*l)]?arr[coor.x+1 + (i*lr)][coor.y + (i*ud)]:0;
-                if(!spot || lookFurther !== 0)
-                    return;
+                let spot = arr[coor.x + (i*lr)]?arr[coor.x + (i*lr)][coor.y + (i*ud)]:null;
+                let lookFurther = arr[coor.x+1 + (i*lr)]?arr[coor.x+1 + (i*lr)][coor.y + (i*ud)]:0;
+                if(spot === null || lookFurther !== 0)
+                    failed = true;
             }
+            if(failed)
+                return false;
             options.push({x: lr, y: ud})
+            return true;
         }
         checkDirection(0, 1)
         checkDirection(0, -1)
         checkDirection(-1, 0)
         checkDirection(1, 0)
-        return options[~~(Math.random) * options.length];
+        return options[~~(Math.random() * options.length)];
     }
     return {
         get board(){return board;}, 

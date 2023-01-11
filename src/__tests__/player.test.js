@@ -17,7 +17,10 @@ describe('player tests', () => {
         expect(p.attack(p2, {x: 4, y: 5})).toBeFalsy();
     })
     describe('random ship placements', () => {
-        const arr = p.generatePlacement();
+        let arr;
+        beforeAll(()=>{
+            arr = p.generatePlacement();
+        })
         test('should generate an array', () =>{ 
             expect(arr).toBeInstanceOf(Array)
         });
