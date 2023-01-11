@@ -62,11 +62,7 @@ describe('gameBoard tests', () => {
 
         
         test('should attack ship successfully', () => {
-            expect(board.receiveAttack({x: 0, y: 0})).toStrictEqual([
-                [null, null, null],
-                [null, true, true],
-                [null, true, true]
-            ]);
+            expect(board.receiveAttack({x: 0, y: 0})).toStrictEqual([{x: 0, y:0}, {x: 1, y: 1}, {x: 0, y:1}, {x: 1, y:0}]);
         });
 
         test('should miss ship and fail', () => {
