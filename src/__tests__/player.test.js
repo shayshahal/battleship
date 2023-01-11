@@ -1,5 +1,4 @@
 import player from "../Logic/player";
-import gameBoard from "../Logic/gameBoard";
 import ship from "../Logic/ship";
 
 describe('player tests', () => {
@@ -17,4 +16,29 @@ describe('player tests', () => {
         expect(p.attack(p2, {x: 5, y: 5})).toBeTruthy()
         expect(p.attack(p2, {x: 4, y: 5})).toBeFalsy();
     })
+    describe('random ship placements', () => {
+        const arr = p.generatePlacement();
+        test('should generate an array', () =>{ 
+            expect(arr).toBeInstanceOf(Array)
+        });
+        
+        test("should generate right amount of ships", ()=> {
+            expect(arr.flat().reduce((res, s)=> res += s, 0)).toBe(20)
+        });
+
+        test("should generate same ship on the same row/column", ()=> {
+            let rnd = ~~(Math.random*4) + 1;
+            let count = 0;
+            let saved = [];
+            expect(arr.some((a, y)=> {
+                a.some((s, x)=> {
+                    if(s === rnd){   
+                        count++;
+                        saved = [x, y]
+                    }
+                    return ((s === rnd) && (count === 2) && ((saved[0] !== x) || (saved[1] !== y)))
+                })        
+            })).toBeFalsy();
+        });
+    });
 })

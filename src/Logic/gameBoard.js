@@ -31,7 +31,7 @@ export default gameBoard = () =>{
     const removeShip = (coor) => board[coor.x][coor.y].ship = null;
     
     const placeShip = (ship, coor) => {
-        if(checkValidity(ship, coor)){
+        if(ship || checkValidity(ship, coor)){
             board[coor.x][coor.y].ship = ship;
             return true;
         }
@@ -42,7 +42,7 @@ export default gameBoard = () =>{
     const receiveAttack = (coor) =>{
         board[coor.x][coor.y].checked = true;
         if(board[coor.x][coor.y].ship){
-            let checks = [[null, null, null],[null, null, null],[null, null, null]]; // matrix of adjacent squares
+            let checks = []; // matrix of checked squares squares
             board[coor.x][coor.y].ship.hit();
             // If hit, all diagonal adjacencies are also known to not be occupied
             for(let i = -1; i < 3; i += 2)
@@ -50,22 +50,22 @@ export default gameBoard = () =>{
                     if(!outOfBounds({x: coor.x+i, y: coor.y+k}))
                     {
                         board[coor.x+i][coor.y+k].checked = true;
-                        checks[i+1][k+1] = true;
+                        checks.push({x: coor.x+i, y: coor.y + k});
                     }
             if(board[coor.x][coor.y].ship.isSunk())
             {   
                 counter++;
                 // If ship is sunk, you can also be sure that all horizontal and vertical adjacent squares are also checked 
                 if(!outOfBounds({x: coor.x, y: coor.y + 1}))
-                    checks[1][2] = true;
+                    checks.push({x: coor.x, y: coor.y + 1});
                 if(!outOfBounds({x: coor.x, y: coor.y - 1}))
-                    checks[1][0] = true;
+                    checks.push({x: coor.x, y: coor.y - 1});
                 if(!outOfBounds({x: coor.x - 1, y: coor.y}))
-                    checks[0][1] = true;
+                    checks.push({x: coor.x - 1, y: coor.y});
                 if(!outOfBounds({x: coor.x + 1, y: coor.y}))
-                    checks[2][1] = true;
+                    checks.push({x: coor.x + 1, y: coor.y});
             }
-            checks[1][1] = true;
+            checks.unshift({x: coor.x, y: coor.y});
             return checks;
         }
         return false;
