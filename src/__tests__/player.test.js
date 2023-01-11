@@ -26,7 +26,7 @@ describe('player tests', () => {
         });
         
         test("should generate right amount of ships", ()=> {
-            expect(arr.flat().reduce((res, s)=> res += s, 0)).toBe(20)
+            expect(arr.flat().reduce((res, s)=> res += (s===-1)?0:s, 0)).toBe(50)
         });
 
         test("should generate same ship on the same row/column", ()=> {
