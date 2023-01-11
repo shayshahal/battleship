@@ -31,7 +31,7 @@ export default gameBoard = () =>{
     const removeShip = (coor) => board[coor.x][coor.y].ship = null;
     
     const placeShip = (ship, coor) => {
-        if(ship || checkValidity(ship, coor)){
+        if(ship && checkValidity(ship, coor)){
             board[coor.x][coor.y].ship = ship;
             return true;
         }
