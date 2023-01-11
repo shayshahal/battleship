@@ -14,6 +14,7 @@ export default player = () =>{
             rndX = ~~(Math.random*10), rndX = ~~(Math.random*10);
         return {x: rndX, y: rndY}
     }
+
     // n - ships to place, arr - the entire board marked by which kind of ship is on a spot
     const generatePlacement = (n = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4], arr = Array.from(Array(10), ()=> new Array(10).fill(0))) =>{
         // If n equals 0 it means we are done with placing ships :)
@@ -23,13 +24,22 @@ export default player = () =>{
         let coor = {x: ~~(Math.random()*10), y: ~~(Math.random()*10)}; // Get random coordinates
         if(arr[coor.x][coor.y] !== 0) // If coordinate already occupied, try again
             return generatePlacement([...n, len], arr);
+
+        const inBounds = (x, y) => (x >= 0 && x <= 9 && y >= 0 && y <= 9); // Bounds check
+
+        if(len === 1) // Special case for len === 1 because the diagonals do not fill all of the surroundings
+        {
+            for(let j = -1; j < 2; j++)
+                for(let k = -1; k < 2; k++)
+                    if(inBounds(coor.x + j, coor.y+k))
+                        arr[coor.x+j][coor.y+k] = (j===0&&k===0)? len : -1;
+            return generatePlacement(n, arr);
+        }
         let vector = checkVector(coor, len, arr); // call checkVector to randomly decide which direction to go
 
         // If vector is empty, that means theres no place for the ship we want to place, therefore try again
         if(vector === undefined) 
             return generatePlacement([...n, len], arr);
-
-        const inBounds = (x, y) => (x >= 0 && x <= 9 && y >= 0 && y <= 9); // Bounds check
         
         // All of this last section is putting the result and also not allowing ships around it
         // Mark the place at the start on the opposite direction of the vector 
@@ -40,8 +50,8 @@ export default player = () =>{
         {    
             arr[coor.x + i*vector.x][coor.y + i*vector.y] = len;
             // Diagonals adjacencies 
-            for(let j = -1; j < 3; j += 2)
-                for(let k = -1; k < 3; k += 2)
+            for(let j = -1; j < 2; j += 2)
+                for(let k = -1; k < 2; k += 2)
                     if(inBounds(coor.x + j + i*vector.x, coor.y + k + i*vector.y))
                         arr[coor.x + j + i*vector.x][coor.y + k + i*vector.y] = -1;
         }
@@ -51,13 +61,14 @@ export default player = () =>{
 
         return generatePlacement(n, arr);
     }
+
     const checkVector = (coor, len, arr) =>{
         let options = [];
         // lr - left/right, ud - up/down
         let checkDirection = (lr, ud) =>{
             for (let i = 0; i < len; i++) {
                 let spot = arr[coor.x + (i*lr)]?arr[coor.x + (i*lr)][coor.y + (i*ud)]:null;
-                if(spot === null || spot !== 0)
+                if(spot !== 0)
                     return;
             }
             options.push({x: lr, y: ud})
@@ -70,6 +81,7 @@ export default player = () =>{
 
         return options[~~(Math.random() * options.length)]; // Get a random direction from the available options
     }
+
     return {
         get board(){return board;}, 
         attack,
