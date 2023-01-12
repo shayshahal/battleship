@@ -28,7 +28,13 @@ export default gameBoard = () =>{
     }
     const outOfBounds = (coor) => (coor.x > 9 || coor.x < 0 || coor.y > 9 || coor.y < 0);
 
-    const removeShip = (coor) => board[coor.x][coor.y].ship = null;
+    const removeShip = (coor) => {
+        if(outOfBounds(coor))
+            return false;
+        let res = board[coor.x][coor.y].ship;
+        board[coor.x][coor.y].ship = null;
+        return res;
+    };
     
     const placeShip = (ship, coor) => {
         if(ship && checkValidity(ship, coor)){
