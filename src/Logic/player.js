@@ -2,7 +2,15 @@ import gameBoard from "./gameBoard";
 export default player = () =>{
 
     let board = gameBoard();
-    let moves = Array.from(Array(3),()=> {return new Array(3).fill(false)})
+    // Initialize ships to be taken 
+    let ships = new Map();  
+    for(let i = 0; i < 4; i++)
+        ships.set(ship(1), 1);
+    for(let i = 0; i < 3; i++)
+        ships.set(ship(2), 2);
+    for(let i = 0; i < 2; i++)
+        ships.set(ship(3), 3);
+    ships.set(ship(4), 4);
     
     // If theres no coor input let the computer play
     const attack = (enemy, coor = null) => enemy.board.receiveAttack(coor??generateAttack()); 
