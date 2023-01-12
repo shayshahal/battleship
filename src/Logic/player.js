@@ -25,6 +25,15 @@ export default player = () =>{
         return false;
     }
 
+    const returnShip = (ship) =>ships.set(ship, ships.get(ship)+1);
+
+    //Checks if game is ready to start
+    const isReady = ()=> {
+        for(const [k, v] of ships)
+            if(v !== 0)
+                return false;
+        return true;
+    }
     const generateAttack =  () =>{
         let rndX = ~~(Math.random*10), rndY = ~~(Math.random*10);
         // Randomize coordinates until you hit one that wasn't attacked previously
