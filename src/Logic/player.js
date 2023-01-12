@@ -14,6 +14,16 @@ export default player = () =>{
     
     // If theres no coor input let the computer play
     const attack = (enemy, coor = null) => enemy.board.receiveAttack(coor??generateAttack()); 
+    const takeShip = (len) =>{
+        for(const [k, v] of ships){
+            if(k.len === len && v !== 0)
+{    
+                ships.set(k, v-1);
+                return k;
+            }
+        }
+        return false;
+    }
 
     const generateAttack =  () =>{
         let rndX = ~~(Math.random*10), rndY = ~~(Math.random*10);
