@@ -83,6 +83,7 @@ export default player = () =>{
             
         for (let i = 0; i < len; i++)
         {    
+            board.placeShip(takeShip(len),{x: coor.x + i*vector.x, y: coor.y + i*vector.y});
             arr[coor.x + i*vector.x][coor.y + i*vector.y] = len;
             // Diagonals adjacencies 
             for(let j = -1; j < 2; j += 2)
