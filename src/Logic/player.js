@@ -59,7 +59,15 @@ export default player = () =>{
             for(let j = -1; j < 2; j++)
                 for(let k = -1; k < 2; k++)
                     if(inBounds(coor.x + j, coor.y+k))
-                        arr[coor.x+j][coor.y+k] = (j===0&&k===0)? len : -1;
+                    {    
+                        if(j === 0&& k === 0)
+                        {
+                            board.placeShip(takeShip(len),{x: coor.x + j, y: coor.y + k});
+                            arr[coor.x+j][coor.y+k] = len;
+                        }
+                        else
+                            arr[coor.x+j][coor.y+k] = -1;      
+                    }
             return generatePlacement(n, arr);
         }
         let vector = checkVector(coor, len, arr); // call checkVector to randomly decide which direction to go
