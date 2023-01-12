@@ -1,6 +1,6 @@
-import gameBoard from "./gameBoard"; 
-import ship from "./ship";
-export default player = () =>{
+import {gameBoard} from "./gameBoard"; 
+import {ship} from "./ship";
+export const newPlayer = () =>{
 
     let board = gameBoard();
     let moves = Array.from(Array(3),()=> {return new Array(3).fill(false)});
@@ -20,8 +20,7 @@ export default player = () =>{
     
     const takeShip = (len) =>{
         for(const [k, v] of ships){
-            if(k.len === len && v !== 0)
-{    
+            if(k.len === len && v !== 0){    
                 ships.set(k, v-1);
                 return k;
             }

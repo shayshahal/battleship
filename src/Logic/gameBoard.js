@@ -1,4 +1,4 @@
-export default gameBoard = () =>{
+export const gameBoard = () =>{
     // Initialize board
     let board = Array.from(Array(10), ()=> {
         return Array.from(Array(10), ()=>{return {ship: null, checked: false}})

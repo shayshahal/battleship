@@ -1,5 +1,6 @@
-import newPlayer from "./player";
-export default game = () =>{
+import {newPlayer} from "./player";
+
+export const game = () =>{
     let status = 'placing';
     let player = newPlayer();
     let ai = newPlayer();
