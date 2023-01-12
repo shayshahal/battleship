@@ -1,7 +1,10 @@
 import gameBoard from "./gameBoard"; 
+import ship from "./ship";
 export default player = () =>{
 
     let board = gameBoard();
+    let moves = Array.from(Array(3),()=> {return new Array(3).fill(false)});
+
     // Initialize ships to be taken 
     let ships = new Map();  
     for(let i = 0; i < 4; i++)
@@ -11,9 +14,10 @@ export default player = () =>{
     for(let i = 0; i < 2; i++)
         ships.set(ship(3), 3);
     ships.set(ship(4), 4);
-    
+
     // If theres no coor input let the computer play
     const attack = (enemy, coor = null) => enemy.board.receiveAttack(coor??generateAttack()); 
+    
     const takeShip = (len) =>{
         for(const [k, v] of ships){
             if(k.len === len && v !== 0)
@@ -34,6 +38,7 @@ export default player = () =>{
                 return false;
         return true;
     }
+
     const generateAttack =  () =>{
         let rndX = ~~(Math.random*10), rndY = ~~(Math.random*10);
         // Randomize coordinates until you hit one that wasn't attacked previously
@@ -41,12 +46,12 @@ export default player = () =>{
             rndX = ~~(Math.random*10), rndX = ~~(Math.random*10);
         return {x: rndX, y: rndY}
     }
-
     // n - ships to place, arr - the entire board marked by which kind of ship is on a spot
     const generatePlacement = (n = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4], arr = Array.from(Array(10), ()=> new Array(10).fill(0))) =>{
         // If n equals 0 it means we are done with placing ships :)
-        if(n.length === 0) 
+        if(n.length === 0)  
             return arr;
+
         let len = n.pop();
         let coor = {x: ~~(Math.random()*10), y: ~~(Math.random()*10)}; // Get random coordinates
         if(arr[coor.x][coor.y] !== 0) // If coordinate already occupied, try again
@@ -121,6 +126,9 @@ export default player = () =>{
     return {
         get board(){return board;}, 
         attack,
-        generatePlacement
+        takeShip,
+        generatePlacement, 
+        returnShip,
+        isReady
     }
 }
