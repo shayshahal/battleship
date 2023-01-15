@@ -39,6 +39,7 @@ export const gameBoard = () =>{
     const placeShip = (ship, coor) => {
         if(ship && checkValidity(ship, coor)){
             board[coor.x][coor.y].ship = ship;
+            ship = null;
             return true;
         }
         return false;
