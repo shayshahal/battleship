@@ -1,0 +1,24 @@
+.ships{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: flex-end;
+    gap: 1vh;
+}
+label{
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}
+:checked ~ div{
+    border: 1px solid white;
+}
+input{
+    appearance: none;
+}
+
+.shipPiece{
+    height: 6vmin;
+    width: 6vmin;
+    border: 1px solid black;
+    transition: all .2s ease;
+}
