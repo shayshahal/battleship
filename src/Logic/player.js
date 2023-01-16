@@ -25,14 +25,14 @@ export const newPlayer = () =>{
                 return k;
             }
         }
-        return false;
+        return null;
     }
 
-    const returnShip = (ship) =>ships.set(ship, ships.get(ship)+1);
+    const returnShip = (ship) => {if(ship) ships.set(ship, ships.get(ship)+1)};
 
     //Checks if game is ready to start
     const isReady = ()=> {
-        for(const [k, v] of ships)
+        for(const v of ships.values())
             if(v !== 0)
                 return false;
         return true;
@@ -123,7 +123,8 @@ export const newPlayer = () =>{
     }
 
     return {
-        get board(){return board;}, 
+        get board(){return board}, 
+        get ships(){return ships}, 
         attack,
         takeShip,
         generatePlacement, 
