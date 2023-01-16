@@ -6,7 +6,7 @@ export const game = () =>{
     let ai = newPlayer();
 
     const start = () =>{
-        if(!ai.isReady() || !player.isReady()){
+        if(!player.isReady()){
             return false;
         }
         status = 'playing'
