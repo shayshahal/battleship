@@ -8,6 +8,7 @@ const btnsDiv = document.getElementById('btns-div');
 const board = createBoard(playerBoard);
 let game;
 const startBtn =document.getElementById('start');
+const extraBoard = document.getElementById('extra-space')
 
 const rndBtn = document.createElement('button');
 rndBtn.classList.add('ctrl-btn');
