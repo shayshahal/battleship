@@ -63,6 +63,19 @@ function placeShipOnBoard(x, y, currSelect){
     }
 }
 
+function startGame() {
+    transitionClear();
+    btnsDiv.removeChild(rndBtn);
+    btnsDiv.removeChild(clrBtn);
+    let aiBoard = createBoard(extraBoard);
+    startBtn.disabled = true;
+    game.ai.generatePlacement();
+    extraBoard.classList.add('Board')
+    for(let x = 0; x < 10; x++)
+        for (let y = 0; y < 10; y++) 
+            aiBoard.arr[x][y].addEventListener('mousedown', ()=>{turn(x, y, aiBoard)});
+
+}
 
 
 ctrlBtn.addEventListener('click', ()=>{
