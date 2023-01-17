@@ -1,8 +1,6 @@
-#player-board{
+.board{
     height: 30vmax;
     width: 30vmax;
-}
-.board{
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(11, 1fr);
@@ -13,6 +11,9 @@
 .boardSquare{
     align-self: stretch;
 }
-.ship{
+.playerShip{
     background-color: rgb(46, 46, 219);
+}
+.aiShip{
+    background-color: rgb(128, 21, 35);
 }
