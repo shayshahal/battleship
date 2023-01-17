@@ -42,6 +42,25 @@ const shipSelectArr = createSelection();
             board.arr[x][y].addEventListener('mousedown', ()=>{placeShipOnBoard(x, y, currSelect)})      
 }
 
+function placeShipOnBoard(x, y, currSelect){
+    let currShip;
+    if(board.arr[x][y].classList.toggle('playerShip')){
+        currShip = game.player.takeShip(currSelect.len);
+        if(game.player.board.placeShip(currShip, {'x': x, 'y': y})){                    
+            currSelect.stack.push({'x': x, 'y': y});
+            board.enableStack(currSelect.stack, currSelect.len === currSelect.stack.length);
+        }
+        else{
+            board.arr[x][y].classList.toggle('playerShip');
+            game.player.returnShip(currShip);
+        }
+    }
+    else{
+        game.player.returnShip(game.player.board.removeShip({'x': x, 'y': y}));
+        currSelect.stack.pop();
+        board.enableStack(currSelect.stack, currSelect.len === currSelect.stack.length);
+    }
+}
 
 
 
