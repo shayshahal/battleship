@@ -115,6 +115,18 @@ function transitionClear(){
         extraBoard.removeChild(extraBoard.firstChild)
     extraBoard.className = '';
 }
+
+startBtn.addEventListener('click', ()=>{
+    if(game.status === 'placing'){    
+        if(game.start())
+            startGame();
+    }
+    else{
+        game = newGame();
+        init();
+    }
+})
+
     else
         newGame = newGame();
 })
