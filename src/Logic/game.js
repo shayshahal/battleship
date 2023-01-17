@@ -1,6 +1,6 @@
 import {newPlayer} from "./player";
 
-export const game = () =>{
+export const newGame = () =>{
     let status = 'placing';
     let player = newPlayer();
     let ai = newPlayer();
