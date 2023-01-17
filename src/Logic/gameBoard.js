@@ -53,13 +53,11 @@ export const gameBoard = () =>{
             // If hit, all diagonal adjacencies are also known to not be occupied
             for(let i = -1; i < 3; i += 2)
                 for(let k = -1; k < 3; k += 2)
-                    if(!outOfBounds({x: coor.x+i, y: coor.y+k}))
-                    {
+                    if(!outOfBounds({x: coor.x+i, y: coor.y+k})){
                         board[coor.x+i][coor.y+k].checked = true;
                         checks.push({x: coor.x+i, y: coor.y + k});
                     }
-            if(board[coor.x][coor.y].ship.isSunk())
-            {   
+            if(board[coor.x][coor.y].ship.isSunk()){   
                 counter++;
                 // If ship is sunk, you can also be sure that all horizontal and vertical adjacent squares are also checked 
                 if(!outOfBounds({x: coor.x, y: coor.y + 1}) && !board[coor.x][coor.y+1].ship)
@@ -71,10 +69,24 @@ export const gameBoard = () =>{
                 if(!outOfBounds({x: coor.x + 1, y: coor.y}) && !board[coor.x+1][coor.y].ship)
                     checks.push({x: coor.x + 1, y: coor.y});
             }
-            checks.unshift({x: coor.x, y: coor.y});
+            checks.unshift(coor);
             return checks;
         }
-        return false;
+        return coor;
     }
-    return {placeShip, removeShip, receiveAttack, isDestroyed}
+    const clear = () =>{
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            for (let k = 0; k < 10; k++) {
+                if(board[i][k].ship)
+                    arr.push(board[i][k].ship)
+                board[i][k].ship = null;
+                board[i][k].checked = null;
+            }
+        }
+        counter = 0;
+        return arr;
+    }
+    
+    return {placeShip, removeShip, receiveAttack, isDestroyed, clear}
 }
