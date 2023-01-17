@@ -3,8 +3,7 @@ import {ship} from "./ship";
 export const newPlayer = () =>{
 
     let board = gameBoard();
-    let moves = Array.from(Array(3),()=> {return new Array(3).fill(false)});
-
+    let moves = Array.from(Array(10),()=> {return new Array(10).fill(false)});
     // Initialize ships to be taken 
     let ships = new Map();  
     for(let i = 0; i < 4; i++)
@@ -28,7 +27,12 @@ export const newPlayer = () =>{
         return null;
     }
 
-    const returnShip = (ship) => {if(ship) ships.set(ship, ships.get(ship)+1)};
+    const returnShip = (ship = null) => {
+        if(ship) 
+            ships.set(ship, ships.get(ship)+1)
+        else
+            board.clear().forEach(s=>ships.set(s, s.len))
+    };
 
     //Checks if game is ready to start
     const isReady = ()=> {
@@ -39,10 +43,10 @@ export const newPlayer = () =>{
     }
 
     const generateAttack =  () =>{
-        let rndX = ~~(Math.random*10), rndY = ~~(Math.random*10);
+        let rndX = ~~(Math.random()*10), rndY = ~~(Math.random()*10);
         // Randomize coordinates until you hit one that wasn't attacked previously
         while(moves[rndX][rndY])
-            rndX = ~~(Math.random*10), rndX = ~~(Math.random*10);
+            rndX = ~~(Math.random()*10), rndX = ~~(Math.random()*10);
         return {x: rndX, y: rndY}
     }
     // n - ships to place, arr - the entire board marked by which kind of ship is on a spot
@@ -121,10 +125,8 @@ export const newPlayer = () =>{
 
         return options[~~(Math.random() * options.length)]; // Get a random direction from the available options
     }
-
     return {
         get board(){return board}, 
-        get ships(){return ships}, 
         attack,
         takeShip,
         generatePlacement, 
