@@ -4,6 +4,7 @@ const div = document.getElementById('extra-space');
 export default function createSelection(){
     while(div.firstChild)
         div.removeChild(div.firstChild);
+    div.classList.add('ships');    
     let arr = [];
     for (let i = 4; i > 0; i--) 
         for(let k = 0; k <= 4-i; k++)
