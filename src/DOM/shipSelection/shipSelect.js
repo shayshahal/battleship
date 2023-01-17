@@ -7,7 +7,7 @@ export default function createSelection(){
     let arr = [];
     for (let i = 4; i > 0; i--) 
         for(let k = 0; k <= 4-i; k++)
-            arr.push({radio: createShip(i), len: i});  
+            arr.push({radio: createShip(i), len: i, stack: []});  
     return arr;
 }
 
@@ -22,7 +22,7 @@ function createShip(len){
     for(let i = 0; i < len; i++){
         const square = document.createElement('div');
         square.classList.add('shipPiece')
-        square.classList.add('ship');
+        square.classList.add('playerShip');
         label.append(square);
     }
     div.append(label);
