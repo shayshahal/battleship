@@ -1,5 +1,5 @@
 import {createBoard} from './board/board'
-import {game} from '../Logic/game'
+import {newGame} from '../Logic/game'
 import createSelection from './shipSelection/shipSelect';
 import './style.css'
 
@@ -22,13 +22,15 @@ init();
 function init(){
     game = newGame();
     transitionClear();
-const shipSelectArr = createSelection();
+    const shipSelectArr = createSelection();
     extraBoard.classList.add('ships');
     btnsDiv.append(rndBtn);
     btnsDiv.append(clrBtn);
     clrBtn.click();
+    startBtn.textContent = 'Start';
+    startBtn.style.color = 'white';
     let currSelect;
-// Ship taking events
+    // Ship taking events
     shipSelectArr.forEach((s) => {
         s.radio.addEventListener('change', ()=>{
             currSelect = s;
@@ -135,7 +137,7 @@ rndBtn.addEventListener('click', ()=>{
         {    
             if(arr[x][y] > 0)
                 board.arr[x][y].classList.add('playerShip');
-    else
+            else
                 board.arr[x][y].classList.remove('playerShip');
             board.arr[x][y].disabled = true;
         }
