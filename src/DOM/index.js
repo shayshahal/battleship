@@ -106,9 +106,15 @@ function turn(x, y, aiBoard){
     }
 }
 
-ctrlBtn.addEventListener('click', ()=>{
-    if(newGame.status === 'placing')
-        newGame.start();
+// Clear placing events and the extra div
+function transitionClear(){
+    for(let x = 0; x < 10; x++)
+        for (let y = 0; y < 10; y++) 
+            board.arr[x][y].disabled = true;
+    while(extraBoard.firstChild)
+        extraBoard.removeChild(extraBoard.firstChild)
+    extraBoard.className = '';
+}
     else
         newGame = newGame();
 })
