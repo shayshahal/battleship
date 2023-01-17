@@ -3,9 +3,18 @@ import {game} from '../Logic/game'
 import createSelection from './shipSelection/shipSelect';
 import './style.css'
 
-const board = createBoard();
-let newGame = game();
-const ctrlBtn =document.getElementById('ctrl-btn');
+const playerBoard = document.getElementById('player-board');
+const btnsDiv = document.getElementById('btns-div');
+const board = createBoard(playerBoard);
+let game;
+const startBtn =document.getElementById('start');
+
+const rndBtn = document.createElement('button');
+rndBtn.classList.add('ctrl-btn');
+rndBtn.textContent = 'Random';
+const clrBtn = document.createElement('button');
+clrBtn.classList.add('ctrl-btn');
+clrBtn.textContent = 'Clear';
 
 init();
 
