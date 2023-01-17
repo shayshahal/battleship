@@ -25,7 +25,7 @@ export const createBoard = (div) => {
     const enableAll = () =>{
         for (let i = 0; i < 10; i++)
             for (let k = 0; k < 10; k++){    
-                if(arr[i][k].className.includes("ship"))
+                if(arr[i][k].className.includes("playerShip"))
                     arr[i][k].disabled = true;    
                 else
                     arr[i][k].disabled = false;   
@@ -40,6 +40,7 @@ export const createBoard = (div) => {
         for (let i = 0; i < 10; i++)
             for (let k = 0; k < 10; k++)
                 arr[i][k].disabled = true;   
+
         arr[stack.at(-1).x][stack.at(-1).y].disabled = false;
         if(isDone)
             return;
