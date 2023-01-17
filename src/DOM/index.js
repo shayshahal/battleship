@@ -77,6 +77,34 @@ function startGame() {
 
 }
 
+// initiates a turn (1 attack for each if no hits)
+function turn(x, y, aiBoard){
+    let res = game.player.attack(game.ai, {'x': x, 'y': y});
+    if(!Array.isArray(res)){
+        aiBoard.arr[x][y].textContent = '✕';
+        aiBoard.arr[x][y].disabled = true;
+        res = game.ai.attack(game.player);
+        while(Array.isArray(res)){
+            board.arr[res[0].x][res[0].y].textContent = '✕';
+            board.arr[res[0].x][res[0].y].disabled = true;
+            res = game.ai.attack(game.player);
+        }   
+        board.arr[res.x][res.y].textContent = '✕';
+        board.arr[res.x][res.y].disabled = true;   
+    }
+    else{
+        aiBoard.arr[x][y].classList.add('aiShip')
+        res.forEach(coor=>{game
+            aiBoard.arr[coor.x][coor.y].textContent = '✕';
+            aiBoard.arr[coor.x][coor.y].disabled = true;
+        })
+    }
+    if(game.isFinished()){
+        startBtn.textContent = game.status;
+        startBtn.style.color = game.status === 'won' ? 'green' : 'red';
+        startBtn.disabled = false;
+    }
+}
 
 ctrlBtn.addEventListener('click', ()=>{
     if(newGame.status === 'placing')
