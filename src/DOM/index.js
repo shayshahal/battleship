@@ -127,6 +127,25 @@ startBtn.addEventListener('click', ()=>{
     }
 })
 
+rndBtn.addEventListener('click', ()=>{
+    game.player.returnShip();
+    let arr = game.player.generatePlacement();
+    for(let x = 0; x < 10; x++)
+        for (let y = 0; y < 10; y++) 
+        {    
+            if(arr[x][y] > 0)
+                board.arr[x][y].classList.add('playerShip');
     else
-        newGame = newGame();
+                board.arr[x][y].classList.remove('playerShip');
+            board.arr[x][y].disabled = true;
+        }
+})
+
+clrBtn.addEventListener('click', ()=>{
+    game.player.returnShip();
+    for(let x = 0; x < 10; x++)
+        for (let y = 0; y < 10; y++) {
+            board.arr[x][y].classList.remove('playerShip');
+            board.arr[x][y].disabled = false;
+        }
 })
