@@ -4,6 +4,7 @@ export const newPlayer = () =>{
 
     let board = gameBoard();
     let moves = Array.from(Array(10),()=> {return new Array(10).fill(false)});
+    let prevAndFuture = {prev: null, future: []};
     // Initialize ships to be taken 
     let ships = new Map();  
     for(let i = 0; i < 4; i++)
@@ -15,7 +16,41 @@ export const newPlayer = () =>{
     ships.set(ship(4), 4);
 
     // If theres no coor input let the computer play
-    const attack = (enemy, coor = null) => enemy.board.receiveAttack(coor??generateAttack()); 
+    const attack = (enemy, coor = null) => {
+        let res = enemy.board.receiveAttack(coor??generateAttack())
+        if(Array.isArray(res)){    
+            for (let i = 1; i < res.length; i++) 
+                moves[res[i].x][res[i].y] = true;   
+        }   
+        if(!coor && Array.isArray(res) && prevAndFuture.future.length === 0){
+            prevAndFuture.prev = res[0]
+            prevAndFuture.future = [];
+            if(res[0].y+1 <= 9)
+                prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
+            if(res[0].y-1 >= 0)
+                prevAndFuture.future.push({x: res[0].x, y: res[0].y-1})
+            if(res[0].x+1 <= 9)
+                prevAndFuture.future.push({x: res[0].x+1, y: res[0].y})
+            if(res[0].x-1 >= 0)
+                prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
+        }
+        else if(!coor && Array.isArray(res) && prevAndFuture.future.length !== 0){
+            let dir = res[0].x === prevAndFuture.prev.x ? 'x' : 'y';
+            if(dir === 'x'){
+                if(res[0].x+1 <= 9)
+                    prevAndFuture.future.push({x: res[0].x+1, y: res[0].y})
+                if(res[0].x-1 >= 0)
+                    prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
+            }
+            else{
+                if(res[0].y+1 <= 9)
+                    prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
+                if(res[0].y-1 >= 0)
+                    prevAndFuture.future.push({x: res[0].x, y: res[0].y-1})                
+            }
+        }
+        return res;
+    }; 
     
     const takeShip = (len) =>{
         for(const [k, v] of ships){
@@ -43,10 +78,14 @@ export const newPlayer = () =>{
     }
 
     const generateAttack =  () =>{
-        let rndX = ~~(Math.random()*10), rndY = ~~(Math.random()*10);
+        let move = prevAndFuture.future.pop();
+        let rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
         // Randomize coordinates until you hit one that wasn't attacked previously
-        while(moves[rndX][rndY])
-            rndX = ~~(Math.random()*10), rndX = ~~(Math.random()*10);
+        while(moves[rndX][rndY]){    
+            move = prevAndFuture.future.pop();
+            rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
+        }
+        moves[rndX][rndY] = true;
         return {x: rndX, y: rndY}
     }
     // n - ships to place, arr - the entire board marked by which kind of ship is on a spot
@@ -127,6 +166,7 @@ export const newPlayer = () =>{
     }
     return {
         get board(){return board}, 
+        get ships(){return ships},
         attack,
         takeShip,
         generatePlacement, 
