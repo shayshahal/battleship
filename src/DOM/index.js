@@ -54,7 +54,8 @@ function init(){
             board.arr[x][y].onclick = ()=>{placeShipOnBoard(x, y, currSelect)};
 
     rndBtn.addEventListener('click', ()=>{
-        game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)
+
+        game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)   
         let arr = game.player.generatePlacement();
         for(let x = 0; x < 10; x++)
             for (let y = 0; y < 10; y++) 
@@ -65,7 +66,8 @@ function init(){
                     board.arr[x][y].classList.remove('playerShip');
                 board.arr[x][y].disabled = true;
             }
-        })
+        shipSelectArr.forEach(s=> s.radio.disabled = true)
+    })
         
     clrBtn.addEventListener('click', ()=>{
         game.player.returnShip();
@@ -75,7 +77,8 @@ function init(){
                 board.arr[x][y].textContent = '';
                 board.arr[x][y].disabled = false;
             }
-        shipSelectArr[0].radio.click();
+        shipSelectArr[0].radio.click(); 
+        shipSelectArr.forEach(s=> s.radio.disabled = false)
     })
 }
 
@@ -103,7 +106,6 @@ function placeShipOnBoard(x, y, currSelect){
 
 function startGame() {
     transitionClear();
-
     // Remove unnecessary buttons
     btnsDiv.removeChild(rndBtn);
     btnsDiv.removeChild(clrBtn);
@@ -121,6 +123,7 @@ function startGame() {
 // initiates a turn (1 attack for each if no hits)
 function turn(x, y, aiBoard){
     let res = game.player.attack(game.ai, {'x': x, 'y': y}); // Let player attack first
+
     if(!Array.isArray(res)){ // If missed
         aiBoard.arr[x][y].textContent = '✕';
         aiBoard.arr[x][y].disabled = true;
@@ -137,14 +140,17 @@ function turn(x, y, aiBoard){
     }
     else{ // If hit
         aiBoard.arr[x][y].classList.add('aiShip') // Reveal ship
+
         res.forEach(coor=>{game // Mark surrounding as also checked
             aiBoard.arr[coor.x][coor.y].textContent = '✕';
             aiBoard.arr[coor.x][coor.y].disabled = true;
         })
     }
+
     if(game.isFinished()){
-        startBtn.textContent = game.status;
+        startBtn.textContent = game.status; // Update status
         startBtn.style.color = game.status === 'won' ? 'green' : 'red';
+
         for(let x = 0; x < 10; x++)
             for (let y = 0; y < 10; y++) 
                 aiBoard.arr[x][y].disabled = true;

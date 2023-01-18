@@ -27,5 +27,5 @@ function createShip(len){
         label.append(square);
     }
     div.append(label);
-    return label;
+    return radio;
 }
