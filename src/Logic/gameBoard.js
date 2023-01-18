@@ -76,7 +76,7 @@ export const gameBoard = () =>{
         let arr = [];
         for (let i = 0; i < 10; i++) {
             for (let k = 0; k < 10; k++) {
-                if(board[i][k])
+                if(board[i][k]) // If there's a ship, store it to put it back in the player's hands
                     arr.push(board[i][k])
                 board[i][k] = null;
             }

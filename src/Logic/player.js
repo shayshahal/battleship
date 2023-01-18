@@ -5,6 +5,7 @@ export const newPlayer = () =>{
     let board = gameBoard();
     let moves = Array.from(Array(10),()=> {return new Array(10).fill(false)});
     let prevAndFuture = {prev: null, future: []};
+
     // Initialize ships to be taken 
     let ships = new Map();  
     for(let i = 0; i < 4; i++)
@@ -18,13 +19,17 @@ export const newPlayer = () =>{
     // If theres no coor input let the computer play
     const attack = (enemy, coor = null) => {
         let res = enemy.board.receiveAttack(coor??generateAttack())
-        if(Array.isArray(res)){    
+
+        if(Array.isArray(res)){    // If res is an array it means the attack hit a ship
             for (let i = 1; i < res.length; i++) 
-                moves[res[i].x][res[i].y] = true;   
+                moves[res[i].x][res[i].y] = true;   // remember all that was checked
         }   
-        if(!coor && Array.isArray(res) && prevAndFuture.future.length === 0){
-            prevAndFuture.prev = res[0]
-            prevAndFuture.future = [];
+
+        if(!coor && Array.isArray(res) && prevAndFuture.future.length === 0){ // If the attack was automatic, a hit, and the first hit in the chain
+            prevAndFuture.prev = res[0] // remember the first hit
+            prevAndFuture.future = []; // Initialize future attacks stack
+
+            // Try all directions
             if(res[0].y+1 <= 9)
                 prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
             if(res[0].y-1 >= 0)
@@ -34,15 +39,16 @@ export const newPlayer = () =>{
             if(res[0].x-1 >= 0)
                 prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
         }
-        else if(!coor && Array.isArray(res) && prevAndFuture.future.length !== 0){
-            let dir = res[0].x === prevAndFuture.prev.x ? 'x' : 'y';
-            if(dir === 'x'){
+        else if(!coor && Array.isArray(res) && prevAndFuture.future.length !== 0){ // If attack was automatic, a hit, and not the first hit in the chain
+            let dir = res[0].x === prevAndFuture.prev.x ? 'x' : 'y'; // Check direction
+
+            if(dir === 'x'){ // Go horizontally
                 if(res[0].x+1 <= 9)
                     prevAndFuture.future.push({x: res[0].x+1, y: res[0].y})
                 if(res[0].x-1 >= 0)
                     prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
             }
-            else{
+            else{ // Go vertically
                 if(res[0].y+1 <= 9)
                     prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
                 if(res[0].y-1 >= 0)
@@ -62,7 +68,7 @@ export const newPlayer = () =>{
         return null;
     }
 
-    const returnShip = (ship = null) => {
+    const returnShip = (ship = null) => { // If ship is null return all the ships from the board to the player
         if(ship) 
             ships.set(ship, ships.get(ship)+1)
         else
@@ -72,15 +78,15 @@ export const newPlayer = () =>{
     //Checks if game is ready to start
     const isReady = ()=> {
         for(const v of ships.values())
-            if(v !== 0)
+            if(v)
                 return false;
         return true;
     }
 
     const generateAttack =  () =>{
-        let move = prevAndFuture.future.pop();
+        let move = prevAndFuture.future.pop(); // Take a move from the smart stack
         let rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
-        // Randomize coordinates until you hit one that wasn't attacked previously
+        // continue requesting coordinates until you hit one that wasn't attacked previously
         while(moves[rndX][rndY]){    
             move = prevAndFuture.future.pop();
             rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
@@ -166,7 +172,6 @@ export const newPlayer = () =>{
     }
     return {
         get board(){return board}, 
-        get ships(){return ships},
         attack,
         takeShip,
         generatePlacement, 
