@@ -15,7 +15,7 @@ button, input
 #content{
     height: 100%;
     width: 100%;
-    background-color: black;
+    background-color: rgb(39, 36, 36);
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr .25fr;
@@ -48,4 +48,16 @@ button, input
     position: absolute;
     bottom: 1%;
     right: 1%;
+    text-decoration: none;
+    background: url('./assets/github-icon.svg');
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat; 
+    height: 7vmin;
+    width: 7vmin;
+}
+#name{
+    position: absolute;
+    bottom: 1%;
+    left: 1%;
 }
