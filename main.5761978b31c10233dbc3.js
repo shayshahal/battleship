@@ -5,20 +5,25 @@ var __webpack_exports__ = {};
 ;// CONCATENATED MODULE: ./src/DOM/board/board.js
 
 const createBoard = (div) => {
+    // Dom creation
     let arr = Array.from(Array(10), ()=> []);
         const boardDiv = div;
         boardDiv.classList.add('board');
-        const nothing = document.createElement('div');
+        const nothing = document.createElement('div'); // Empty square at top left
         boardDiv.append(nothing)
-        for (let i = 0; i < 10; i++) {
+
+        for (let i = 0; i < 10; i++) { // Indexes
             const index = document.createElement('div');
             index.textContent = i+1;
             boardDiv.append(index)
         }
+
         for (let i = 0; i < 10; i++) {
+            // Indexes
             const index = document.createElement('div');
             index.textContent = String.fromCharCode(('A'.charCodeAt() + i));
-            boardDiv.append(index);
+            boardDiv.append(index); 
+
             for (let k = 0; k < 10; k++) {
                 const square = document.createElement('button');
                 square.classList.add('boardSquare');
@@ -27,6 +32,7 @@ const createBoard = (div) => {
             }
         }
 
+    // Enable all squares that are not a ship
     const enableAll = () =>{
         for (let i = 0; i < 10; i++)
             for (let k = 0; k < 10; k++){    
@@ -37,25 +43,31 @@ const createBoard = (div) => {
             }
     }
 
+    // Enable squares based on previous user inputs
     const enableStack = (stack, isDone) => {
-        if(!stack.length){   
+        if(!stack.length){  
             enableAll();
             return;
         }
-        for (let i = 0; i < 10; i++)
+
+        // disable all at first
+        for (let i = 0; i < 10; i++) 
             for (let k = 0; k < 10; k++)
                 arr[i][k].disabled = true;   
 
-        arr[stack.at(-1).x][stack.at(-1).y].disabled = false;
-        if(isDone)
+        arr[stack.at(-1).x][stack.at(-1).y].disabled = false; // Enable current input
+
+        if(isDone) // If user has put all the parts of the ship, don't let him continue
             return;
-        if(stack[0].y === stack.at(-1).y){
+
+        // Both happen if user only inputs 1 square
+        if(stack[0].y === stack.at(-1).y){ // If user chose to go vertically
             if(stack.at(-1).x >= stack[0].x)
                 arr[Math.min(stack.at(-1).x+1, 9)][stack.at(-1).y].disabled = false;
             if(stack.at(-1).x <= stack[0].x)
                 arr[Math.max(stack.at(-1).x-1, 0)][stack.at(-1).y].disabled = false;
         }
-        if(stack[0].x === stack.at(-1).x){
+        if(stack[0].x === stack.at(-1).x){ // If user chose to go horizontally
             if(stack.at(-1).y >= stack[0].y)
                 arr[stack.at(-1).x][Math.min(stack.at(-1).y+1, 9)].disabled = false;
             if(stack.at(-1).y <= stack[0].y)
@@ -75,7 +87,7 @@ const createBoard = (div) => {
 const gameBoard = () =>{
     // Initialize board
     let board = Array.from(Array(10), ()=> {
-        return Array.from(Array(10), ()=>{return {ship: null, checked: false}})
+        return Array.from(Array(10), ()=>{})
     });
     // Initialize counter that tracks how many ships are alive on the board
     let counter = 0;
@@ -88,12 +100,12 @@ const gameBoard = () =>{
             for (let k = -1; k < 2; k++){
                 const curr = board[coor.x+i] ? board[coor.x+i][coor.y+k] : null;
                 // If spot is out of bounds or
-                if(curr && curr.ship){
+                if(curr){
                     /* Checks if 
                         1.coordinates are not already occupied or diagonally adjacent to an occupied spot.
                         2.coordinates are adjacent to a different ship
                     */
-                    if(((i === 0 && k === 0) || (i !== 0 && k !== 0)) || curr.ship !== ship)
+                    if(((i === 0 && k === 0) || (i !== 0 && k !== 0)) || curr !== ship)
                         return false;
                 }
             }        
@@ -105,14 +117,14 @@ const gameBoard = () =>{
     const removeShip = (coor) => {
         if(outOfBounds(coor))
             return false;
-        let res = board[coor.x][coor.y].ship;
-        board[coor.x][coor.y].ship = null;
-        return res;
+        let res = board[coor.x][coor.y];
+        board[coor.x][coor.y] = null;
+        return res; // Return the ship that was removed in order to put it back in the player's hands
     };
     
     const placeShip = (ship, coor) => {
         if(ship && checkValidity(ship, coor)){
-            board[coor.x][coor.y].ship = ship;
+            board[coor.x][coor.y] = ship;
             return true;
         }
         return false;
@@ -120,27 +132,25 @@ const gameBoard = () =>{
     const isDestroyed = () => counter === 10;
     
     const receiveAttack = (coor) =>{
-        board[coor.x][coor.y].checked = true;
-        if(board[coor.x][coor.y].ship){
+        if(board[coor.x][coor.y]){
             let checks = []; // matrix of checked squares squares
-            board[coor.x][coor.y].ship.hit();
+            board[coor.x][coor.y].hit();
             // If hit, all diagonal adjacencies are also known to not be occupied
             for(let i = -1; i < 3; i += 2)
                 for(let k = -1; k < 3; k += 2)
-                    if(!outOfBounds({x: coor.x+i, y: coor.y+k})){
-                        board[coor.x+i][coor.y+k].checked = true;
+                    if(!outOfBounds({x: coor.x+i, y: coor.y+k}))
                         checks.push({x: coor.x+i, y: coor.y + k});
-                    }
-            if(board[coor.x][coor.y].ship.isSunk()){   
+                    
+            if(board[coor.x][coor.y].isSunk()){   
                 counter++;
                 // If ship is sunk, you can also be sure that all horizontal and vertical adjacent squares are also checked 
-                if(!outOfBounds({x: coor.x, y: coor.y + 1}) && !board[coor.x][coor.y+1].ship)
+                if(!outOfBounds({x: coor.x, y: coor.y + 1}) && !board[coor.x][coor.y+1])
                     checks.push({x: coor.x, y: coor.y + 1});
-                if(!outOfBounds({x: coor.x, y: coor.y - 1}) && !board[coor.x][coor.y-1].ship)
+                if(!outOfBounds({x: coor.x, y: coor.y - 1}) && !board[coor.x][coor.y-1])
                     checks.push({x: coor.x, y: coor.y - 1});
-                if(!outOfBounds({x: coor.x - 1, y: coor.y}) && !board[coor.x-1][coor.y].ship)
+                if(!outOfBounds({x: coor.x - 1, y: coor.y}) && !board[coor.x-1][coor.y])
                     checks.push({x: coor.x - 1, y: coor.y});
-                if(!outOfBounds({x: coor.x + 1, y: coor.y}) && !board[coor.x+1][coor.y].ship)
+                if(!outOfBounds({x: coor.x + 1, y: coor.y}) && !board[coor.x+1][coor.y])
                     checks.push({x: coor.x + 1, y: coor.y});
             }
             checks.unshift(coor);
@@ -152,10 +162,9 @@ const gameBoard = () =>{
         let arr = [];
         for (let i = 0; i < 10; i++) {
             for (let k = 0; k < 10; k++) {
-                if(board[i][k].ship)
-                    arr.push(board[i][k].ship)
-                board[i][k].ship = null;
-                board[i][k].checked = null;
+                if(board[i][k]) // If there's a ship, store it to put it back in the player's hands
+                    arr.push(board[i][k])
+                board[i][k] = null;
             }
         }
         counter = 0;
@@ -179,6 +188,7 @@ const newPlayer = () =>{
     let board = gameBoard();
     let moves = Array.from(Array(10),()=> {return new Array(10).fill(false)});
     let prevAndFuture = {prev: null, future: []};
+
     // Initialize ships to be taken 
     let ships = new Map();  
     for(let i = 0; i < 4; i++)
@@ -192,13 +202,17 @@ const newPlayer = () =>{
     // If theres no coor input let the computer play
     const attack = (enemy, coor = null) => {
         let res = enemy.board.receiveAttack(coor??generateAttack())
-        if(Array.isArray(res)){    
+
+        if(Array.isArray(res)){    // If res is an array it means the attack hit a ship
             for (let i = 1; i < res.length; i++) 
-                moves[res[i].x][res[i].y] = true;   
+                moves[res[i].x][res[i].y] = true;   // remember all that was checked
         }   
-        if(!coor && Array.isArray(res) && prevAndFuture.future.length === 0){
-            prevAndFuture.prev = res[0]
-            prevAndFuture.future = [];
+
+        if(!coor && Array.isArray(res) && prevAndFuture.future.length === 0){ // If the attack was automatic, a hit, and the first hit in the chain
+            prevAndFuture.prev = res[0] // remember the first hit
+            prevAndFuture.future = []; // Initialize future attacks stack
+
+            // Try all directions
             if(res[0].y+1 <= 9)
                 prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
             if(res[0].y-1 >= 0)
@@ -208,15 +222,16 @@ const newPlayer = () =>{
             if(res[0].x-1 >= 0)
                 prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
         }
-        else if(!coor && Array.isArray(res) && prevAndFuture.future.length !== 0){
-            let dir = res[0].x === prevAndFuture.prev.x ? 'x' : 'y';
-            if(dir === 'x'){
+        else if(!coor && Array.isArray(res) && prevAndFuture.future.length !== 0){ // If attack was automatic, a hit, and not the first hit in the chain
+            let dir = res[0].x === prevAndFuture.prev.x ? 'x' : 'y'; // Check direction
+
+            if(dir === 'x'){ // Go horizontally
                 if(res[0].x+1 <= 9)
                     prevAndFuture.future.push({x: res[0].x+1, y: res[0].y})
                 if(res[0].x-1 >= 0)
                     prevAndFuture.future.push({x: res[0].x-1, y: res[0].y}) 
             }
-            else{
+            else{ // Go vertically
                 if(res[0].y+1 <= 9)
                     prevAndFuture.future.push({x: res[0].x, y: res[0].y+1})
                 if(res[0].y-1 >= 0)
@@ -236,7 +251,7 @@ const newPlayer = () =>{
         return null;
     }
 
-    const returnShip = (ship = null) => {
+    const returnShip = (ship = null) => { // If ship is null return all the ships from the board to the player
         if(ship) 
             ships.set(ship, ships.get(ship)+1)
         else
@@ -246,15 +261,15 @@ const newPlayer = () =>{
     //Checks if game is ready to start
     const isReady = ()=> {
         for(const v of ships.values())
-            if(v !== 0)
+            if(v)
                 return false;
         return true;
     }
 
     const generateAttack =  () =>{
-        let move = prevAndFuture.future.pop();
+        let move = prevAndFuture.future.pop(); // Take a move from the smart stack
         let rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
-        // Randomize coordinates until you hit one that wasn't attacked previously
+        // continue requesting coordinates until you hit one that wasn't attacked previously
         while(moves[rndX][rndY]){    
             move = prevAndFuture.future.pop();
             rndX = move ? move.x : ~~(Math.random()*10), rndY = move ? move.y : ~~(Math.random()*10);
@@ -340,7 +355,6 @@ const newPlayer = () =>{
     }
     return {
         get board(){return board}, 
-        get ships(){return ships},
         attack,
         takeShip,
         generatePlacement, 
@@ -389,8 +403,11 @@ const newGame = () =>{
 const div = document.getElementById('extra-space');
 
 function createSelection(){
-    while(div.firstChild)
+    while(div.firstChild) // Delete previous content of div
         div.removeChild(div.firstChild);
+    div.textContent = '';
+    div.className = ''
+
     div.classList.add('ships');    
     let arr = [];
     for (let i = 4; i > 0; i--) 
@@ -404,17 +421,19 @@ function createShip(len){
     label.for = 'ship' + len;
     const radio = document.createElement('input');
     radio.type = 'radio';
-    radio.id = len;
     radio.name = 'ship';
     label.append(radio);
+
     for(let i = 0; i < len; i++){
         const square = document.createElement('div');
         square.classList.add('shipPiece')
         square.classList.add('playerShip');
         label.append(square);
     }
+
     div.append(label);
-    return label;
+
+    return radio;
 }
 ;// CONCATENATED MODULE: ./src/DOM/index.js
 
@@ -473,7 +492,8 @@ function init(){
             board.arr[x][y].onclick = ()=>{placeShipOnBoard(x, y, currSelect)};
 
     rndBtn.addEventListener('click', ()=>{
-        game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)
+
+        game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)   
         let arr = game.player.generatePlacement();
         for(let x = 0; x < 10; x++)
             for (let y = 0; y < 10; y++) 
@@ -484,7 +504,8 @@ function init(){
                     board.arr[x][y].classList.remove('playerShip');
                 board.arr[x][y].disabled = true;
             }
-        })
+        shipSelectArr.forEach(s=> s.radio.disabled = true)
+    })
         
     clrBtn.addEventListener('click', ()=>{
         game.player.returnShip();
@@ -494,7 +515,8 @@ function init(){
                 board.arr[x][y].textContent = '';
                 board.arr[x][y].disabled = false;
             }
-        shipSelectArr[0].radio.click();
+        shipSelectArr[0].radio.click(); 
+        shipSelectArr.forEach(s=> s.radio.disabled = false)
     })
 }
 
@@ -522,7 +544,6 @@ function placeShipOnBoard(x, y, currSelect){
 
 function startGame() {
     transitionClear();
-
     // Remove unnecessary buttons
     btnsDiv.removeChild(rndBtn);
     btnsDiv.removeChild(clrBtn);
@@ -540,6 +561,7 @@ function startGame() {
 // initiates a turn (1 attack for each if no hits)
 function turn(x, y, aiBoard){
     let res = game.player.attack(game.ai, {'x': x, 'y': y}); // Let player attack first
+
     if(!Array.isArray(res)){ // If missed
         aiBoard.arr[x][y].textContent = '✕';
         aiBoard.arr[x][y].disabled = true;
@@ -556,14 +578,17 @@ function turn(x, y, aiBoard){
     }
     else{ // If hit
         aiBoard.arr[x][y].classList.add('aiShip') // Reveal ship
+
         res.forEach(coor=>{game // Mark surrounding as also checked
             aiBoard.arr[coor.x][coor.y].textContent = '✕';
             aiBoard.arr[coor.x][coor.y].disabled = true;
         })
     }
+
     if(game.isFinished()){
-        startBtn.textContent = game.status;
+        startBtn.textContent = game.status; // Update status
         startBtn.style.color = game.status === 'won' ? 'green' : 'red';
+
         for(let x = 0; x < 10; x++)
             for (let y = 0; y < 10; y++) 
                 aiBoard.arr[x][y].disabled = true;
@@ -597,4 +622,4 @@ startBtn.addEventListener('click', ()=>{
 
 /******/ })()
 ;
-//# sourceMappingURL=main.8126f8ac799d08424c38.js.map
+//# sourceMappingURL=main.5761978b31c10233dbc3.js.map
