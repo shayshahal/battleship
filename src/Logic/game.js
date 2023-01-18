@@ -20,7 +20,7 @@ export const newGame = () =>{
         }
         if(player.board.isDestroyed()){
             status = 'lost';
-            return false;
+            return true;
         }
         return false;
     }
