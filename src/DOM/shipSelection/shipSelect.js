@@ -2,8 +2,11 @@ import './shipSelect.css'
 const div = document.getElementById('extra-space');
 
 export default function createSelection(){
-    while(div.firstChild)
+    while(div.firstChild) // Delete previous content of div
         div.removeChild(div.firstChild);
+    div.textContent = '';
+    div.className = ''
+
     div.classList.add('ships');    
     let arr = [];
     for (let i = 4; i > 0; i--) 
@@ -17,15 +20,17 @@ function createShip(len){
     label.for = 'ship' + len;
     const radio = document.createElement('input');
     radio.type = 'radio';
-    radio.id = len;
     radio.name = 'ship';
     label.append(radio);
+
     for(let i = 0; i < len; i++){
         const square = document.createElement('div');
         square.classList.add('shipPiece')
         square.classList.add('playerShip');
         label.append(square);
     }
+
     div.append(label);
+
     return radio;
 }
