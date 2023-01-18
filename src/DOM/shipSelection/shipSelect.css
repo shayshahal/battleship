@@ -1,8 +1,11 @@
 .ships{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: flex-end;
-    gap: 3vh 3vw;
+    display: flex;
+    align-items: flex-start;
+    justify-content:flex-start;
+    flex-flow: wrap;
+    gap: 2vh 4vw;
+    padding: 1vh 1vw;
+    border: 5px solid black;
 }
 label{
     display: flex;
@@ -17,8 +20,8 @@ input{
 }
 
 .shipPiece{
-    height: 6vmin;
-    width: 6vmin;
+    height: 2vmax;
+    width: 2vmax;
     border: 1px solid black;
     transition: all .2s ease;
 }

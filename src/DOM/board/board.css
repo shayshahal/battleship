@@ -1,6 +1,6 @@
 .board{
-    height: 30vmax;
-    width: 30vmax;
+    height: 35vmax;
+    width: 35vmax;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(11, 1fr);
