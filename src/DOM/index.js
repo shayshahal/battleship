@@ -51,13 +51,37 @@ function init(){
     // Board placing events
     for(let x = 0; x < 10; x++)
         for (let y = 0; y < 10; y++) 
-            board.arr[x][y].addEventListener('mousedown', ()=>{placeShipOnBoard(x, y, currSelect)})      
+            board.arr[x][y].onclick = ()=>{placeShipOnBoard(x, y, currSelect)};
+
+    rndBtn.addEventListener('click', ()=>{
+        game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)
+        let arr = game.player.generatePlacement();
+        for(let x = 0; x < 10; x++)
+            for (let y = 0; y < 10; y++) 
+            {    
+                if(arr[x][y] > 0)
+                    board.arr[x][y].classList.add('playerShip');
+                else
+                    board.arr[x][y].classList.remove('playerShip');
+                board.arr[x][y].disabled = true;
+            }
+        })
+        
+    clrBtn.addEventListener('click', ()=>{
+        game.player.returnShip();
+        for(let x = 0; x < 10; x++)
+            for (let y = 0; y < 10; y++) {
+                board.arr[x][y].classList.remove('playerShip');
+                board.arr[x][y].textContent = '';
+                board.arr[x][y].disabled = false;
+            }
+        shipSelectArr[0].radio.click();
+    })
 }
 
 // function to place ships on the board in the DOM while also synchronizing the logic
 function placeShipOnBoard(x, y, currSelect){
     let currShip;
-
     if(board.arr[x][y].classList.toggle('playerShip')){ // If placing a ship
         currShip = game.player.takeShip(currSelect.len); 
         
@@ -91,7 +115,7 @@ function startGame() {
     // Event listeners
     for(let x = 0; x < 10; x++)
         for (let y = 0; y < 10; y++) 
-            aiBoard.arr[x][y].addEventListener('mousedown', ()=>{turn(x, y, aiBoard)});
+            aiBoard.arr[x][y].addEventListener('click', ()=>{turn(x, y, aiBoard)});
 }
 
 // initiates a turn (1 attack for each if no hits)
@@ -121,19 +145,26 @@ function turn(x, y, aiBoard){
     if(game.isFinished()){
         startBtn.textContent = game.status;
         startBtn.style.color = game.status === 'won' ? 'green' : 'red';
+        for(let x = 0; x < 10; x++)
+            for (let y = 0; y < 10; y++) 
+                aiBoard.arr[x][y].disabled = true;
     }
 }
 
 // Clear placing events and the extra div
 function transitionClear(){   
     for(let x = 0; x < 10; x++)
-        for (let y = 0; y < 10; y++) 
+        for (let y = 0; y < 10; y++) {    
             board.arr[x][y].disabled = true;
+            board.arr[x][y].removeAttribute('onclick');
+        }
     while(extraBoard.firstChild)
         extraBoard.removeChild(extraBoard.firstChild)
     extraBoard.className = '';
 }
+
 // Control buttons event listeners
+
 startBtn.addEventListener('click', ()=>{
     if(game.status === 'placing'){    
         if(game.start())
@@ -143,26 +174,4 @@ startBtn.addEventListener('click', ()=>{
         init();
 })
 
-rndBtn.addEventListener('click', ()=>{
-    game.player.returnShip(); // Return all ships that were previously taken (no parameters = all)
-    let arr = game.player.generatePlacement();
-    for(let x = 0; x < 10; x++)
-        for (let y = 0; y < 10; y++) 
-        {    
-            if(arr[x][y] > 0)
-                board.arr[x][y].classList.add('playerShip');
-            else
-                board.arr[x][y].classList.remove('playerShip');
-            board.arr[x][y].disabled = true;
-        }
-})
 
-clrBtn.addEventListener('click', ()=>{
-    game.player.returnShip();
-    for(let x = 0; x < 10; x++)
-        for (let y = 0; y < 10; y++) {
-            board.arr[x][y].classList.remove('playerShip');
-            board.arr[x][y].textContent = '';
-            board.arr[x][y].disabled = false;
-        }
-})
