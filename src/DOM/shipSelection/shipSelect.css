@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: flex-end;
-    gap: 1vh;
+    gap: 3vh 3vw;
 }
 label{
     display: flex;
