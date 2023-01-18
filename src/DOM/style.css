@@ -50,7 +50,7 @@ button, input
     bottom: 1%;
     right: 1%;
     text-decoration: none;
-    background: url('./assets/github-icon.svg');
+    background: url('./assets/github.svg');
     background-position: center center;
     background-size: contain;
     background-repeat: no-repeat; 
