@@ -1,7 +1,7 @@
 # battleship
 This is a Battleship game project following The Odin Project curriculum.
 
-[Live Demo]("https://shayshahal.github.io/battleship/")
+[Live Demo](https://shayshahal.github.io/battleship/)
 
 # What I Learned
 - TDD Principles and workflow
